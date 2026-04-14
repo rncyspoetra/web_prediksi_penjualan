@@ -20,7 +20,7 @@
                 <div class="card shadow">
                     <div class="card-body text-center">
                         <h5>Naive Bayes</h5>
-                        <h3><?= round($result['accuracy']['nb'], 2) ?>%</h3>
+                        <h3><?= round($result['nb_normal']['accuracy'], 2) ?>%</h3>
                     </div>
                 </div>
             </div>
@@ -29,7 +29,7 @@
                 <div class="card shadow">
                     <div class="card-body text-center">
                         <h5>NB + SMOTE</h5>
-                        <h3><?= round($result['accuracy']['smote'], 2) ?>%</h3>
+                        <h3><?= round($result['nb_smote']['accuracy'], 2) ?>%</h3>
                     </div>
                 </div>
             </div>
@@ -38,7 +38,7 @@
                 <div class="card shadow">
                     <div class="card-body text-center">
                         <h5>NB + ROS</h5>
-                        <h3><?= round($result['accuracy']['ros'], 2) ?>%</h3>
+                        <h3><?= round($result['nb_ros']['accuracy'], 2) ?>%</h3>
                     </div>
                 </div>
             </div>
@@ -98,22 +98,22 @@
 
                             <tbody>
                                 <?php $no = 1;
-                                foreach ($result['nb'] as $row): ?>
+                                foreach ($result['nb_normal']['results'] as $row): ?>
                                     <tr>
                                         <td><?= $no++ ?></td>
 
-                                        <td><?= $row['bulan_penjualan'] ?></td>
-                                        <td><?= $row['frozen'] ?></td>
-                                        <td><?= $row['pentol'] ?></td>
-                                        <td><?= $row['shif'] ?></td>
+                                        <td><?= $row['data']['bulan_penjualan'] ?></td>
+                                        <td><?= $row['data']['frozen'] ?></td>
+                                        <td><?= $row['data']['pentol'] ?></td>
+                                        <td><?= $row['data']['shif'] ?></td>
 
-                                        <td><?= $row['status_penjualan'] ?></td>
+                                        <td><?= $row['actual'] ?></td>
 
-                                        <td><?= round($row['prob_tidak_laris'], 4) ?></td>
-                                        <td><?= round($row['prob_laris'], 4) ?></td>
-                                        <td><?= round($row['prob_sangat_laris'], 4) ?></td>
+                                        <td><?= round($row['probabilities']['tidak laris'] ?? 0, 4) ?></td>
+                                        <td><?= round($row['probabilities']['laris'] ?? 0, 4) ?></td>
+                                        <td><?= round($row['probabilities']['sangat laris'] ?? 0, 4) ?></td>
 
-                                        <td><b><?= $row['prediksi'] ?></b></td>
+                                        <td><b><?= $row['predicted'] ?></b></td>
                                     </tr>
                                 <?php endforeach; ?>
                             </tbody>
@@ -150,22 +150,22 @@
 
                             <tbody>
                                 <?php $no = 1;
-                                foreach ($result['smote'] as $row): ?>
+                                foreach ($result['nb_smote']['results'] as $row): ?>
                                     <tr>
                                         <td><?= $no++ ?></td>
 
-                                        <td><?= $row['bulan_penjualan'] ?></td>
-                                        <td><?= $row['frozen'] ?></td>
-                                        <td><?= $row['pentol'] ?></td>
-                                        <td><?= $row['shif'] ?></td>
+                                        <td><?= $row['data']['bulan_penjualan'] ?></td>
+                                        <td><?= $row['data']['frozen'] ?></td>
+                                        <td><?= $row['data']['pentol'] ?></td>
+                                        <td><?= $row['data']['shif'] ?></td>
 
-                                        <td><?= $row['status_penjualan'] ?></td>
+                                        <td><?= $row['actual'] ?></td>
 
-                                        <td><?= round($row['prob_tidak_laris'], 4) ?></td>
-                                        <td><?= round($row['prob_laris'], 4) ?></td>
-                                        <td><?= round($row['prob_sangat_laris'], 4) ?></td>
+                                        <td><?= round($row['probabilities']['tidak laris'] ?? 0, 4) ?></td>
+                                        <td><?= round($row['probabilities']['laris'] ?? 0, 4) ?></td>
+                                        <td><?= round($row['probabilities']['sangat laris'] ?? 0, 4) ?></td>
 
-                                        <td><b><?= $row['prediksi'] ?></b></td>
+                                        <td><b><?= $row['predicted'] ?></b></td>
                                     </tr>
                                 <?php endforeach; ?>
                             </tbody>
@@ -202,22 +202,22 @@
 
                             <tbody>
                                 <?php $no = 1;
-                                foreach ($result['ros'] as $row): ?>
+                                foreach ($result['nb_ros']['results'] as $row): ?>
                                     <tr>
                                         <td><?= $no++ ?></td>
 
-                                        <td><?= $row['bulan_penjualan'] ?></td>
-                                        <td><?= $row['frozen'] ?></td>
-                                        <td><?= $row['pentol'] ?></td>
-                                        <td><?= $row['shif'] ?></td>
+                                        <td><?= $row['data']['bulan_penjualan'] ?></td>
+                                        <td><?= $row['data']['frozen'] ?></td>
+                                        <td><?= $row['data']['pentol'] ?></td>
+                                        <td><?= $row['data']['shif'] ?></td>
 
-                                        <td><?= $row['status_penjualan'] ?></td>
+                                        <td><?= $row['actual'] ?></td>
 
-                                        <td><?= round($row['prob_tidak_laris'], 4) ?></td>
-                                        <td><?= round($row['prob_laris'], 4) ?></td>
-                                        <td><?= round($row['prob_sangat_laris'], 4) ?></td>
+                                        <td><?= round($row['probabilities']['tidak laris'] ?? 0, 4) ?></td>
+                                        <td><?= round($row['probabilities']['laris'] ?? 0, 4) ?></td>
+                                        <td><?= round($row['probabilities']['sangat laris'] ?? 0, 4) ?></td>
 
-                                        <td><b><?= $row['prediksi'] ?></b></td>
+                                        <td><b><?= $row['predicted'] ?></b></td>
                                     </tr>
                                 <?php endforeach; ?>
                             </tbody>

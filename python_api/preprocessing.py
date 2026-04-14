@@ -47,7 +47,7 @@ def process_data(df):
     # =========================
     # MODEL BASELINE
     # =========================
-    model_nb = CategoricalNB()
+    model_nb = GaussianNB()
     model_nb.fit(X_train, y_train)
     pred_nb = model_nb.predict(X_test)
     acc_nb = accuracy_score(y_test, pred_nb)
@@ -55,7 +55,7 @@ def process_data(df):
     # =========================
     # MODEL SMOTE
     # =========================
-    model_smote = CategoricalNB()
+    model_smote = GaussianNB()
     model_smote.fit(X_sm, y_sm)
     pred_smote = model_smote.predict(X_test)
     acc_smote = accuracy_score(y_test, pred_smote)
@@ -63,7 +63,7 @@ def process_data(df):
     # =========================
     # MODEL ROS
     # =========================
-    model_ros = CategoricalNB()
+    model_ros = GaussianNB()
     model_ros.fit(X_ros, y_ros)
     pred_ros = model_ros.predict(X_test)
     acc_ros = accuracy_score(y_test, pred_ros)

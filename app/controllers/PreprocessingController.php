@@ -29,6 +29,11 @@ class PreprocessingController extends Controller
         $model = new PenjualanModel();
         $data = $model->getAllForPython();
 
+
+/*         echo "<pre>";
+        print_r($data);
+        exit; */
+
         // 2. kirim ke python
         $api = new PythonApiService();
         $result = $api->send($data);

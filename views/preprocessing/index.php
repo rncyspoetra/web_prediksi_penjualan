@@ -17,12 +17,14 @@
         <i class="fas fa-cogs"></i> Proses Splitting + SMOTE + ROS
     </a>
 
-    <?php if (!empty($_SESSION['train_data']) || !empty($_SESSION['test_data']) || !empty($_SESSION['smote_data']) || !empty($$_SESSION['ros_data'])) : ?>
+    <?php
+    $trainData = $_SESSION['train_data'] ?? [];
+    $testData  = $_SESSION['test_data'] ?? [];
+    $smoteData = $_SESSION['smote_data'] ?? [];
+    $rosData   = $_SESSION['ros_data'] ?? [];
+    ?>
 
-        <?php $trainData = $_SESSION['train_data']; ?>
-        <?php $testData = $_SESSION['test_data']; ?>
-        <?php $smoteData = $_SESSION['smote_data']; ?>
-        <?php $rosData = $_SESSION['ros_data']; ?>
+    <?php if (!empty($trainData) || !empty($testData) || !empty($smoteData) || !empty($rosData)) : ?>
 
         <!-- NAV TAB -->
         <ul class="nav nav-tabs" role="tablist">

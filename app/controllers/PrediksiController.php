@@ -19,34 +19,126 @@ class PrediksiController extends Controller
         $result = Session::get('prediksi_result');
         $hasResult = !empty($result);
 
-        $nb_cm = $smote_cm = $ros_cm = [];
-        $nb_metrics = $smote_metrics = $ros_metrics = [];
-
         $this->view('prediksi/index', compact(
             'result',
             'user',
-            'nb_cm',
-            'smote_cm',
-            'ros_cm',
-            'nb_metrics',
-            'smote_metrics',
-            'ros_metrics',
             'hasResult'
         ));
     }
 
-    private function accuracy(array $predictions): float
+    public function naiveBayesPredict($trainData, $testData)
     {
+        $results = [];
         $correct = 0;
-        $total = count($predictions);
 
-        foreach ($predictions as $row) {
-            if (($row['status_penjualan'] ?? null) === ($row['prediksi'] ?? null)) {
-                $correct++;
+        // normalisasi helper (biar sama kayak Excel)
+        $normalize = function ($value) {
+            return trim(strtolower($value));
+        };
+
+        // normalisasi train data (IMPORTANT)
+        foreach ($trainData as &$row) {
+            $row['status_penjualan'] = $normalize($row['status_penjualan']);
+            $row['bulan_penjualan'] = $normalize($row['bulan_penjualan']);
+            $row['shif'] = $normalize($row['shif']);
+            $row['pentol'] = $normalize($row['pentol']);
+            $row['frozen'] = $normalize($row['frozen']);
+        }
+
+        foreach ($testData as &$row) {
+            $row['status_penjualan'] = $normalize($row['status_penjualan']);
+            $row['bulan_penjualan'] = $normalize($row['bulan_penjualan']);
+            $row['shif'] = $normalize($row['shif']);
+            $row['pentol'] = $normalize($row['pentol']);
+            $row['frozen'] = $normalize($row['frozen']);
+        }
+
+        $classes = array_unique(array_column($trainData, 'status_penjualan'));
+        $totalTrain = count($trainData);
+
+        // hitung class count
+        $classCounts = [];
+        foreach ($classes as $class) {
+            $classCounts[$class] = 0;
+            foreach ($trainData as $d) {
+                if ($d['status_penjualan'] == $class) {
+                    $classCounts[$class]++;
+                }
             }
         }
 
-        return $total ? ($correct / $total) * 100 : 0;
+        foreach ($testData as $test) {
+
+            $probabilities = [];
+
+            foreach ($classes as $class) {
+
+                // PRIOR (Excel style)
+                $prob = $classCounts[$class] / $totalTrain;
+
+                foreach (['bulan_penjualan', 'shif', 'pentol', 'frozen'] as $feature) {
+
+                    $countFeature = 0;
+
+                    foreach ($trainData as $d) {
+                        if (
+                            $d['status_penjualan'] == $class &&
+                            $d[$feature] == $test[$feature]
+                        ) {
+                            $countFeature++;
+                        }
+                    }
+
+                    // =========================
+                    // TANPA smoothing (biar sama Excel)
+                    // =========================
+                    if ($classCounts[$class] == 0) {
+                        $probFeature = 0;
+                    } else {
+                        $probFeature = $countFeature / $classCounts[$class];
+                    }
+
+                    // Excel biasanya rounding di display
+                    $probFeature = round($probFeature, 4);
+
+                    $prob *= $probFeature;
+
+                    // optional rounding step-by-step (biar makin mirip Excel)
+                    $prob = round($prob, 10);
+                }
+
+                $probabilities[$class] = $prob;
+            }
+
+            // ambil max probability
+            arsort($probabilities);
+            $predicted = array_key_first($probabilities);
+
+            if ($predicted == $test['status_penjualan']) {
+                $correct++;
+            }
+
+            
+
+            $results[] = [
+                'data' => $test,
+                'probabilities' => $probabilities,
+                'predicted' => $predicted,
+                'actual' => $test['status_penjualan']
+            ];
+        }
+
+        $accuracy = round(($correct / count($testData)) * 100, 2);
+
+/*         echo "<pre>";
+        print_r($results);
+        print_r($accuracy);
+        exit; */
+
+        return [
+            'results' => $results,
+            'accuracy' => $accuracy
+        ];
     }
 
     public function process()
@@ -55,6 +147,8 @@ class PrediksiController extends Controller
 
         $train = Session::get('train_data');
         $test  = Session::get('test_data');
+        $smote  = Session::get('smote_data');
+        $ros  = Session::get('ros_data');
         $user = Session::get('user');
 
         if (!$train || !$test) {
@@ -64,52 +158,27 @@ class PrediksiController extends Controller
         // =========================
         // NB normal
         // =========================
-        $nb = new NaiveBayesService();
-        $nb->train($train);
-        $pred_nb = $nb->predict($test);
 
-        // =========================
-        // SMOTE
-        // =========================
-        $smote_train = Session::get('smote_data');
+        $resultNBNormal = $this->naiveBayesPredict($train, $test);
+        $resultNBSmote  = $this->naiveBayesPredict($smote, $test);
+        $resultNBRos    = $this->naiveBayesPredict($ros, $test);
 
-        $smote = new NaiveBayesService();
-        $smote->train($smote_train);
-        $pred_smote = $smote->predict($test);
-
-        // =========================
-        // ROS
-        // =========================
-        $ros_train = Session::get('ros_data');
-
-        $ros = new NaiveBayesService();
-        $ros->train($ros_train);
-        $pred_ros = $ros->predict($test);
-
-        // =========================
-        // ACCURACY
-        // =========================
-        $nb_acc     = $this->accuracy($pred_nb);
-        $smote_acc  = $this->accuracy($pred_smote);
-        $ros_acc    = $this->accuracy($pred_ros);
+        Session::set('prediksi_result', [
+            'nb_normal' => $resultNBNormal,
+            'nb_smote'  => $resultNBSmote,
+            'nb_ros'    => $resultNBRos
+        ]);
 
         $result = Session::get('prediksi_result');
         $hasResult = !empty($result);
 
-        Session::set('prediksi_result', [
-            'test' => $test,
-            'nb' => $pred_nb,
-            'smote' => $pred_smote,
-            'ros' => $pred_ros,
-            'accuracy' => [
-                'nb' => $nb_acc,
-                'smote' => $smote_acc,
-                'ros' => $ros_acc
-            ]
-        ]);
-
+/*         echo "<pre>";
+        print_r($result);
+        exit;
+ */
+        // kirim ke view
         $this->view('prediksi/index', [
-            'result' => Session::get('prediksi_result'),
+            'result' => $result,
             'user' => $user,
             'hasResult' => $hasResult
         ]);
