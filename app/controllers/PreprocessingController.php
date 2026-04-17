@@ -44,8 +44,8 @@ class PreprocessingController extends Controller
 
         // 3. simpan ke session
         Session::set('test_data', $result['test']);
-        Session::set('smote_data', $result['smote']);
-        Session::set('ros_data', $result['ros']);
+        /* Session::set('smote_data', $result['smote']);
+        Session::set('ros_data', $result['ros']); */
         Session::set('train_data', $result['train']);
 
 

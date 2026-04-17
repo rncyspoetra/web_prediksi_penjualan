@@ -4,8 +4,8 @@
 <script>
     const trainData = <?= json_encode(array_values($_SESSION['train_data'] ?? [])) ?>;
     const testData = <?= json_encode(array_values($_SESSION['test_data'] ?? [])) ?>;
-    const smoteData = <?= json_encode(array_values($_SESSION['smote_data'] ?? [])) ?>;
-    const rosData = <?= json_encode(array_values($_SESSION['ros_data'] ?? [])) ?>;
+    /* const smoteData = <?= json_encode(array_values($_SESSION['smote_data'] ?? [])) ?>; */
+    /* const rosData = <?= json_encode(array_values($_SESSION['ros_data'] ?? [])) ?>; */
 </script>
 
 <div class="container-fluid">
@@ -20,11 +20,11 @@
     <?php
     $trainData = $_SESSION['train_data'] ?? [];
     $testData  = $_SESSION['test_data'] ?? [];
-    $smoteData = $_SESSION['smote_data'] ?? [];
-    $rosData   = $_SESSION['ros_data'] ?? [];
+/*     $smoteData = $_SESSION['smote_data'] ?? [];
+    $rosData   = $_SESSION['ros_data'] ?? []; */
     ?>
 
-    <?php if (!empty($trainData) || !empty($testData) || !empty($smoteData) || !empty($rosData)) : ?>
+    <?php if (!empty($trainData) || !empty($testData) /* || !empty($smoteData) || !empty($rosData) */) : ?>
 
         <!-- NAV TAB -->
         <ul class="nav nav-tabs" role="tablist">
@@ -41,7 +41,7 @@
                 </a>
             </li>
 
-            <li class="nav-item">
+<!--             <li class="nav-item">
                 <a class="nav-link" data-toggle="tab" href="#smote">
                     SMOTE
                 </a>
@@ -51,7 +51,7 @@
                 <a class="nav-link" data-toggle="tab" href="#ros">
                     ROS
                 </a>
-            </li>
+            </li> -->
 
         </ul>
 
@@ -128,7 +128,7 @@
             </div>
 
             <!-- ================= SMOTE ================= -->
-            <div class="tab-pane fade" id="smote">
+            <!-- <div class="tab-pane fade" id="smote">
                 <div class="card shadow mb-4">
                     <div class="card-header bg-warning text-dark font-weight-bold">
                         Data Training + SMOTE
@@ -161,10 +161,10 @@
                         </table>
                     </div>
                 </div>
-            </div>
+            </div> -->
 
             <!-- ================= ROS ================= -->
-            <div class="tab-pane fade" id="ros">
+            <!-- <div class="tab-pane fade" id="ros">
                 <div class="card shadow mb-4">
                     <div class="card-header bg-danger text-white font-weight-bold">
                         Data Training + ROS
@@ -197,7 +197,7 @@
                         </table>
                     </div>
                 </div>
-            </div>
+            </div> -->
 
         </div>
 

@@ -147,8 +147,8 @@ class PrediksiController extends Controller
 
         $train = Session::get('train_data');
         $test  = Session::get('test_data');
-        $smote  = Session::get('smote_data');
-        $ros  = Session::get('ros_data');
+        # $smote  = Session::get('smote_data');
+        # $ros  = Session::get('ros_data');
         $user = Session::get('user');
 
         if (!$train || !$test) {
@@ -160,13 +160,13 @@ class PrediksiController extends Controller
         // =========================
 
         $resultNBNormal = $this->naiveBayesPredict($train, $test);
-        $resultNBSmote  = $this->naiveBayesPredict($smote, $test);
-        $resultNBRos    = $this->naiveBayesPredict($ros, $test);
+        # $resultNBSmote  = $this->naiveBayesPredict($smote, $test);
+        # $resultNBRos    = $this->naiveBayesPredict($ros, $test);
 
         Session::set('prediksi_result', [
             'nb_normal' => $resultNBNormal,
-            'nb_smote'  => $resultNBSmote,
-            'nb_ros'    => $resultNBRos
+            /* 'nb_smote'  => $resultNBSmote, */
+            /* 'nb_ros'    => $resultNBRos */
         ]);
 
         $result = Session::get('prediksi_result');

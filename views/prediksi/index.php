@@ -25,23 +25,23 @@
                 </div>
             </div>
 
-            <div class="col-md-4">
+            <!-- <div class="col-md-4">
                 <div class="card shadow">
                     <div class="card-body text-center">
                         <h5>NB + SMOTE</h5>
                         <h3><?= round($result['nb_smote']['accuracy'], 2) ?>%</h3>
                     </div>
                 </div>
-            </div>
+            </div> -->
 
-            <div class="col-md-4">
+            <!-- <div class="col-md-4">
                 <div class="card shadow">
                     <div class="card-body text-center">
                         <h5>NB + ROS</h5>
                         <h3><?= round($result['nb_ros']['accuracy'], 2) ?>%</h3>
                     </div>
                 </div>
-            </div>
+            </div> -->
 
         </div>
 
@@ -54,7 +54,7 @@
                 </a>
             </li>
 
-            <li class="nav-item">
+            <!-- <li class="nav-item">
                 <a class="nav-link" data-toggle="tab" href="#smote">
                     NB + SMOTE
                 </a>
@@ -64,7 +64,7 @@
                 <a class="nav-link" data-toggle="tab" href="#ros">
                     NB + ROS
                 </a>
-            </li>
+            </li> -->
 
         </ul>
 

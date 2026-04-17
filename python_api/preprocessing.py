@@ -1,5 +1,5 @@
 from sklearn.model_selection import train_test_split
-from imblearn.over_sampling import SMOTE, RandomOverSampler
+# from imblearn.over_sampling import SMOTE, RandomOverSampler
 from sklearn.preprocessing import LabelEncoder
 from sklearn.naive_bayes import GaussianNB, CategoricalNB
 from sklearn.metrics import accuracy_score
@@ -38,11 +38,11 @@ def process_data(df):
     # =========================
     # SMOTE & ROS
     # =========================
-    smote = SMOTE(random_state=42)
-    X_sm, y_sm = smote.fit_resample(X_train, y_train)
+    # smote = SMOTE(random_state=42)
+    # X_sm, y_sm = smote.fit_resample(X_train, y_train)
 
-    ros = RandomOverSampler(random_state=42)
-    X_ros, y_ros = ros.fit_resample(X_train, y_train)
+    # ros = RandomOverSampler(random_state=42)
+    # X_ros, y_ros = ros.fit_resample(X_train, y_train)
 
     # =========================
     # MODEL BASELINE
@@ -55,26 +55,26 @@ def process_data(df):
     # =========================
     # MODEL SMOTE
     # =========================
-    model_smote = GaussianNB()
-    model_smote.fit(X_sm, y_sm)
-    pred_smote = model_smote.predict(X_test)
-    acc_smote = accuracy_score(y_test, pred_smote)
+    # model_smote = GaussianNB()
+    # model_smote.fit(X_sm, y_sm)
+    # pred_smote = model_smote.predict(X_test)
+    # acc_smote = accuracy_score(y_test, pred_smote)
 
     # =========================
     # MODEL ROS
     # =========================
-    model_ros = GaussianNB()
-    model_ros.fit(X_ros, y_ros)
-    pred_ros = model_ros.predict(X_test)
-    acc_ros = accuracy_score(y_test, pred_ros)
+    # model_ros = GaussianNB()
+    #  model_ros.fit(X_ros, y_ros)
+    # pred_ros = model_ros.predict(X_test)
+    # acc_ros = accuracy_score(y_test, pred_ros)
 
     # =========================
     # STDOUT (UNTUK PHP / API)
     # =========================
     output = {
         "accuracy_nb": acc_nb,
-        "accuracy_smote": acc_smote,
-        "accuracy_ros": acc_ros
+        # "accuracy_smote": acc_smote,
+        # "accuracy_ros": acc_ros
     }
 
     print(json.dumps(output))
@@ -96,12 +96,23 @@ def process_data(df):
     # =========================
     train = decode(pd.concat([X_train, y_train], axis=1))
     test = decode(pd.concat([X_test, y_test], axis=1))
-    smote_df = decode(pd.concat([X_sm, y_sm], axis=1))
-    ros_df = decode(pd.concat([X_ros, y_ros], axis=1))
+    # smote_df = decode(pd.concat([X_sm, y_sm], axis=1))
+    # ros_df = decode(pd.concat([X_ros, y_ros], axis=1))
+
+    # =========================
+    # SAVE KE EXCEL
+    # =========================
+    train_df = decode(pd.concat([X_train, y_train], axis=1))
+    test_df = decode(pd.concat([X_test, y_test], axis=1))
+
+    train_df.to_excel("train_data.xlsx", index=False)
+    test_df.to_excel("test_data.xlsx", index=False)
+
 
     return {
         "train": train.to_dict(orient='records'),
         "test": test.to_dict(orient='records'),
-        "smote": smote_df.to_dict(orient='records'),
-        "ros": ros_df.to_dict(orient='records')
+        # "smote": smote_df.to_dict(orient='records'),
+        # "ros": ros_df.to_dict(orient='records')
     }
+    
